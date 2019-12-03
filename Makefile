@@ -1158,7 +1158,7 @@ THIRD_PARTY_SOURCES += compat/obstack.%
 THIRD_PARTY_SOURCES += compat/poll/%
 THIRD_PARTY_SOURCES += compat/regex/%
 THIRD_PARTY_SOURCES += sha1collisiondetection/%
-THIRD_PARTY_SOURCES += sha1dc/%
+THIRD_PARTY_SOURCES += sha/sha1dc/%
 
 GITLIBS = common-main.o $(LIB_FILE) $(XDIFF_LIB)
 EXTLIBS =
@@ -1657,11 +1657,11 @@ ifdef OPENSSL_SHA1
 	BASIC_CFLAGS += -DSHA1_OPENSSL
 else
 ifdef BLK_SHA1
-	LIB_OBJS += block-sha1/sha1.o
+	LIB_OBJS += sha/sha1/sha1.o
 	BASIC_CFLAGS += -DSHA1_BLK
 else
 ifdef PPC_SHA1
-	LIB_OBJS += ppc/sha1.o ppc/sha1ppc.o
+	LIB_OBJS += sha/sha1ppc/sha1.o sha/sha1ppc/sha1ppc.o
 	BASIC_CFLAGS += -DSHA1_PPC
 else
 ifdef APPLE_COMMON_CRYPTO
@@ -1670,7 +1670,7 @@ ifdef APPLE_COMMON_CRYPTO
 else
 	DC_SHA1 := YesPlease
 	BASIC_CFLAGS += -DSHA1_DC
-	LIB_OBJS += sha1dc_git.o
+	LIB_OBJS += sha/sha1dc_git.o
 ifdef DC_SHA1_EXTERNAL
 	ifdef DC_SHA1_SUBMODULE
 		ifneq ($(DC_SHA1_SUBMODULE),auto)
@@ -1685,8 +1685,8 @@ ifdef DC_SHA1_SUBMODULE
 	LIB_OBJS += sha1collisiondetection/lib/ubc_check.o
 	BASIC_CFLAGS += -DDC_SHA1_SUBMODULE
 else
-	LIB_OBJS += sha1dc/sha1.o
-	LIB_OBJS += sha1dc/ubc_check.o
+	LIB_OBJS += sha/sha1dc/sha1.o
+	LIB_OBJS += sha/sha1dc/ubc_check.o
 endif
 	BASIC_CFLAGS += \
 		-DSHA1DC_NO_STANDARD_INCLUDES \
@@ -1707,7 +1707,7 @@ ifdef GCRYPT_SHA256
 	BASIC_CFLAGS += -DSHA256_GCRYPT
 	EXTLIBS += -lgcrypt
 else
-	LIB_OBJS += sha256/block/sha256.o
+	LIB_OBJS += sha/sha256/sha256.o
 	BASIC_CFLAGS += -DSHA256_BLK
 endif
 endif
@@ -2782,7 +2782,7 @@ sparse: $(SP_OBJ)
 GEN_HDRS := command-list.h unicode-width.h
 EXCEPT_HDRS := $(GEN_HDRS) compat/% xdiff/%
 ifndef GCRYPT_SHA256
-	EXCEPT_HDRS += sha256/gcrypt.h
+	EXCEPT_HDRS += sha/sha256/gcrypt.h
 endif
 CHK_HDRS = $(filter-out $(EXCEPT_HDRS),$(LIB_H))
 HCO = $(patsubst %.h,%.hco,$(CHK_HDRS))

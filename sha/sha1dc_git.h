@@ -5,7 +5,7 @@
 #elif defined(DC_SHA1_SUBMODULE)
 #include "sha1collisiondetection/lib/sha1.h"
 #else
-#include "sha1dc/sha1.h"
+#include "sha/sha1dc/sha1.h"
 #endif
 
 #ifdef DC_SHA1_EXTERNAL
