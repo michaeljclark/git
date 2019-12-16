@@ -52,6 +52,32 @@ test_expect_success 'test basic SHA-256 hash values' '
 	grep 6ef19b41225c5369f1c104d45d8d85efa9b057b53b14b4b9b939dd74decc5321 actual
 '
 
+test_expect_success 'test basic SHA-224 hash values' '
+	test-tool sha224 </dev/null >actual &&
+	grep d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f actual &&
+	printf "a" | test-tool sha224 >actual &&
+	grep abd37534c7d9a2efb9465de931cd7055ffdb8879563ae98078d6d6d5 actual &&
+	printf "abc" | test-tool sha224 >actual &&
+	grep 23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7 actual &&
+	printf "message digest" | test-tool sha224 >actual &&
+	grep 2cb21c83ae2f004de7e81c3c7019cbcb65b71ab656b22d6d0c39b8eb actual &&
+	printf "abcdefghijklmnopqrstuvwxyz" | test-tool sha224 >actual &&
+	grep 45a5f72c39c5cff2522eb3429799e49e5f44b356ef926bcf390dccc2 actual &&
+	# Try to exercise the chunking code by turning autoflush on.
+	perl -e "$| = 1; print q{aaaaaaaaaa} for 1..100000;" | \
+		test-tool sha224 >actual &&
+	grep 20794655980c91d8bbb4c1ea97618a4bf03f42581948b2ee4ee7ad67 actual &&
+	perl -e "$| = 1; print q{abcdefghijklmnopqrstuvwxyz} for 1..100000;" | \
+		test-tool sha224 >actual &&
+	grep 22c732697633e465ba836e11c7829ee185a72b53fbf35fde511bfbcd actual &&
+	printf "blob 0\0" | test-tool sha224 >actual &&
+	grep fcdd1b166dde803306a44852e0b7dcdf73bad0dec56f001feb39ea89 actual &&
+	printf "blob 3\0abc" | test-tool sha224 >actual &&
+	grep 22d78642a42d232e5b21911de160bed5b033badbecb8fc8b693e6ffe actual &&
+	printf "tree 0\0" | test-tool sha224 >actual &&
+	grep c82429250d411b4991a3de9b42f500908a4a242a8d3b3485e5e3bf71 actual
+'
+
 test_expect_success 'test basic SHA-512/224 hash values' '
 	test-tool sha512-224 </dev/null >actual &&
 	grep 6ed0dd02806fa89e25de060c19d3ac86cabb87d6a0ddd05c333b84f4 actual &&

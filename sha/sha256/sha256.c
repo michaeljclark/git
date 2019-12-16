@@ -6,8 +6,24 @@
 
 #define BLKSIZE blk_SHA256_BLKSIZE
 
+void blk_SHA224_Init(blk_SHA256_CTX *ctx)
+{
+	ctx->digestlen = blk_SHA224_HASHSIZE;
+	ctx->offset = 0;
+	ctx->size = 0;
+	ctx->state[0] = 0xc1059ed8ul;
+	ctx->state[1] = 0x367cd507ul;
+	ctx->state[2] = 0x3070dd17ul;
+	ctx->state[3] = 0xf70e5939ul;
+	ctx->state[4] = 0xffc00b31ul;
+	ctx->state[5] = 0x68581511ul;
+	ctx->state[6] = 0x64f98fa7ul;
+	ctx->state[7] = 0xbefa4fa4ul;
+}
+
 void blk_SHA256_Init(blk_SHA256_CTX *ctx)
 {
+	ctx->digestlen = blk_SHA256_HASHSIZE;
 	ctx->offset = 0;
 	ctx->size = 0;
 	ctx->state[0] = 0x6a09e667ul;
@@ -191,6 +207,6 @@ void blk_SHA256_Final(unsigned char *digest, blk_SHA256_CTX *ctx)
 	blk_SHA256_Update(ctx, padlen, 8);
 
 	/* copy output */
-	for (i = 0; i < 8; i++, digest += sizeof(uint32_t))
+	for (i = 0; i < (ctx->digestlen >> 2); i++, digest += sizeof(uint32_t))
 		put_be32(digest, ctx->state[i]);
 }

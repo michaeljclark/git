@@ -54,6 +54,18 @@
 #define git_SHA1_Update		platform_SHA1_Update
 #define git_SHA1_Final		platform_SHA1_Final
 
+#ifndef platform_SHA224_CTX
+#define platform_SHA224_CTX	SHA224_CTX
+#define platform_SHA224_Init	SHA224_Init
+#define platform_SHA224_Update	SHA224_Update
+#define platform_SHA224_Final	SHA224_Final
+#endif
+
+#define git_SHA224_CTX		platform_SHA224_CTX
+#define git_SHA224_Init		platform_SHA224_Init
+#define git_SHA224_Update	platform_SHA224_Update
+#define git_SHA224_Final	platform_SHA224_Final
+
 #ifndef platform_SHA256_CTX
 #define platform_SHA256_CTX	SHA256_CTX
 #define platform_SHA256_Init	SHA256_Init
@@ -101,20 +113,22 @@
 #define GIT_HASH_SHA1 1
 /* SHA-256  */
 #define GIT_HASH_SHA256 2
+/* SHA-224  */
+#define GIT_HASH_SHA224 3
 /* SHA-512  */
-#define GIT_HASH_SHA512 3
+#define GIT_HASH_SHA512 4
 /* SHA-512-224  */
-#define GIT_HASH_SHA512_224 4
+#define GIT_HASH_SHA512_224 5
 /* SHA-512-256  */
-#define GIT_HASH_SHA512_256 5
+#define GIT_HASH_SHA512_256 6
 /* SHA-3-224 */
-#define GIT_HASH_SHA3_224 6
+#define GIT_HASH_SHA3_224 7
 /* SHA-3-256 */
-#define GIT_HASH_SHA3_256 7
+#define GIT_HASH_SHA3_256 8
 /* SHA-3-384 */
-#define GIT_HASH_SHA3_384 8
+#define GIT_HASH_SHA3_384 9
 /* SHA-3-512 */
-#define GIT_HASH_SHA3_512 9
+#define GIT_HASH_SHA3_512 10
 /* Number of algorithms supported (including unknown). */
 #define GIT_HASH_NALGOS (GIT_HASH_SHA3_512 + 1)
 
@@ -187,6 +201,12 @@ static inline int hash_algo_by_ptr(const struct git_hash_algo *p)
 #define GIT_SHA1_HEXSZ (2 * GIT_SHA1_RAWSZ)
 /* The block size of SHA-1. */
 #define GIT_SHA1_BLKSZ 64
+
+/* The length in bytes and in hex digits of an object name (SHA-224 value). */
+#define GIT_SHA224_RAWSZ 28
+#define GIT_SHA224_HEXSZ (2 * GIT_SHA224_RAWSZ)
+/* The block size of SHA-224. */
+#define GIT_SHA224_BLKSZ 64
 
 /* The length in bytes and in hex digits of an object name (SHA-256 value). */
 #define GIT_SHA256_RAWSZ 32

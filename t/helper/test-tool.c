@@ -56,6 +56,7 @@ static struct test_cmd cmds[] = {
 	{ "serve-v2", cmd__serve_v2 },
 	{ "sha1", cmd__sha1 },
 	{ "sha1-array", cmd__sha1_array },
+	{ "sha224", cmd__sha224 },
 	{ "sha256", cmd__sha256 },
 	{ "sha512", cmd__sha512 },
 	{ "sha512-224", cmd__sha512_224 },

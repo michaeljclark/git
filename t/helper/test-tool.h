@@ -46,6 +46,7 @@ int cmd__scrap_cache_tree(int argc, const char **argv);
 int cmd__serve_v2(int argc, const char **argv);
 int cmd__sha1(int argc, const char **argv);
 int cmd__sha1_array(int argc, const char **argv);
+int cmd__sha224(int argc, const char **argv);
 int cmd__sha256(int argc, const char **argv);
 int cmd__sha512(int argc, const char **argv);
 int cmd__sha512_224(int argc, const char **argv);
