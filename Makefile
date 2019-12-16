@@ -183,6 +183,8 @@ all::
 #
 # Define BLK_SHA256 to use the built-in SHA-256 routines.
 #
+# Define BLK_SHA512 to use the built-in SHA-512 routines.
+#
 # Define GCRYPT_SHA256 to use the SHA-256 routines in libgcrypt.
 #
 # Define OPENSSL_SHA256 to use the SHA-256 routines in OpenSSL.
@@ -739,6 +741,7 @@ TEST_BUILTINS_OBJS += test-serve-v2.o
 TEST_BUILTINS_OBJS += test-sha1.o
 TEST_BUILTINS_OBJS += test-sha1-array.o
 TEST_BUILTINS_OBJS += test-sha256.o
+TEST_BUILTINS_OBJS += test-sha512.o
 TEST_BUILTINS_OBJS += test-sigchain.o
 TEST_BUILTINS_OBJS += test-strcmp-offset.o
 TEST_BUILTINS_OBJS += test-string-list.o
@@ -1710,6 +1713,14 @@ else
 	LIB_OBJS += sha/sha256/sha256.o
 	BASIC_CFLAGS += -DSHA256_BLK
 endif
+endif
+
+ifdef GCRYPT_SHA512
+	BASIC_CFLAGS += -DSHA512_GCRYPT
+	EXTLIBS += -lgcrypt
+else
+	LIB_OBJS += sha/sha512/sha512.o
+	BASIC_CFLAGS += -DSHA512_BLK
 endif
 
 ifdef SHA1_MAX_BLOCK_SIZE
@@ -2783,6 +2794,9 @@ GEN_HDRS := command-list.h unicode-width.h
 EXCEPT_HDRS := $(GEN_HDRS) compat/% xdiff/%
 ifndef GCRYPT_SHA256
 	EXCEPT_HDRS += sha/sha256/gcrypt.h
+endif
+ifndef GCRYPT_SHA512
+	EXCEPT_HDRS += sha/sha512/gcrypt.h
 endif
 CHK_HDRS = $(filter-out $(EXCEPT_HDRS),$(LIB_H))
 HCO = $(patsubst %.h,%.hco,$(CHK_HDRS))

@@ -23,6 +23,12 @@
 #include "sha/sha256/sha256.h"
 #endif
 
+#if defined(SHA512_GCRYPT)
+#include "sha/sha512/gcrypt.h"
+#else
+#include "sha/sha512/sha512.h"
+#endif
+
 #ifndef platform_SHA_CTX
 /*
  * platform's underlying implementation of SHA-1; could be OpenSSL,
@@ -54,6 +60,13 @@
 #define git_SHA256_Update	platform_SHA256_Update
 #define git_SHA256_Final	platform_SHA256_Final
 
+#define git_SHA512_CTX		platform_SHA512_CTX
+#define git_SHA512_Init		platform_SHA512_Init
+#define git_SHA512_224_Init	platform_SHA512_224_Init
+#define git_SHA512_256_Init	platform_SHA512_256_Init
+#define git_SHA512_Update	platform_SHA512_Update
+#define git_SHA512_Final	platform_SHA512_Final
+
 #ifdef SHA1_MAX_BLOCK_SIZE
 #include "compat/sha1-chunked.h"
 #undef git_SHA1_Update
@@ -74,13 +87,20 @@
 #define GIT_HASH_SHA1 1
 /* SHA-256  */
 #define GIT_HASH_SHA256 2
+/* SHA-512  */
+#define GIT_HASH_SHA512 3
+/* SHA-512-224  */
+#define GIT_HASH_SHA512_224 4
+/* SHA-512-256  */
+#define GIT_HASH_SHA512_256 5
 /* Number of algorithms supported (including unknown). */
-#define GIT_HASH_NALGOS (GIT_HASH_SHA256 + 1)
+#define GIT_HASH_NALGOS (GIT_HASH_SHA512_256 + 1)
 
 /* A suitably aligned type for stack allocations of hash contexts. */
 union git_hash_ctx {
 	git_SHA_CTX sha1;
 	git_SHA256_CTX sha256;
+	git_SHA512_CTX sha512;
 };
 typedef union git_hash_ctx git_hash_ctx;
 
@@ -151,11 +171,29 @@ static inline int hash_algo_by_ptr(const struct git_hash_algo *p)
 /* The block size of SHA-256. */
 #define GIT_SHA256_BLKSZ 64
 
+/* The length in bytes and in hex digits of an object name (SHA-512 value). */
+#define GIT_SHA512_RAWSZ 64
+#define GIT_SHA512_HEXSZ (2 * GIT_SHA512_RAWSZ)
+/* The block size of SHA-512. */
+#define GIT_SHA512_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-512-224 value). */
+#define GIT_SHA512_224_RAWSZ 28
+#define GIT_SHA512_224_HEXSZ (2 * GIT_SHA512_224_RAWSZ)
+/* The block size of SHA-512-224. */
+#define GIT_SHA512_224_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-512-256 value). */
+#define GIT_SHA512_256_RAWSZ 32
+#define GIT_SHA512_256_HEXSZ (2 * GIT_SHA512_256_RAWSZ)
+/* The block size of SHA-512-256. */
+#define GIT_SHA512_256_BLKSZ 128
+
 /* The length in byte and in hex digits of the largest possible hash value. */
-#define GIT_MAX_RAWSZ GIT_SHA256_RAWSZ
-#define GIT_MAX_HEXSZ GIT_SHA256_HEXSZ
+#define GIT_MAX_RAWSZ GIT_SHA512_RAWSZ
+#define GIT_MAX_HEXSZ GIT_SHA512_HEXSZ
 /* The largest possible block size for any supported hash. */
-#define GIT_MAX_BLKSZ GIT_SHA256_BLKSZ
+#define GIT_MAX_BLKSZ GIT_SHA512_BLKSZ
 
 struct object_id {
 	unsigned char hash[GIT_MAX_RAWSZ];

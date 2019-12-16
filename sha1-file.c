@@ -45,6 +45,23 @@
 	"\x04\xd4\x5d\x8d\x85\xef\xa9\xb0\x57\xb5" \
 	"\x3b\x14\xb4\xb9\xb9\x39\xdd\x74\xde\xcc" \
 	"\x53\x21"
+#define EMPTY_TREE_SHA512_224_BIN_LITERAL \
+	"\xaa\xff\x3a\xb0\x67\xb1\x51\xd0\xbc\x31" \
+	"\x30\x27\x7d\x64\xa1\x1e\xb2\x57\xe0\xfe" \
+	"\xca\x74\xe0\xdc\xb7\xe3\x83\x03"
+#define EMPTY_TREE_SHA512_256_BIN_LITERAL \
+	"\x2c\xfe\x78\xf8\xea\x2f\xa9\xd2\x19\x37" \
+	"\x48\x68\xe7\xaa\x1f\xe4\x91\x62\x2b\xcb" \
+	"\x58\x15\xdc\xf3\xad\x12\xf3\x08\xbe\x79" \
+	"\x59\xdb"
+#define EMPTY_TREE_SHA512_BIN_LITERAL \
+	"\xd5\x1f\xd9\x2f\xdd\x8b\x29\xd0\x8f\x5c" \
+	"\xba\x26\x1a\xbb\x22\x15\x29\xe6\xff\xb1" \
+	"\x26\x4c\x51\x1b\xe2\x16\xd2\xf5\x30\x6e" \
+	"\xcd\xcc\x38\xe2\x39\x2d\xe4\xf6\x2c\x74" \
+	"\x56\x07\xa9\x76\x80\xfc\x7c\xcb\xbe\x73" \
+	"\x04\x4d\xfc\x03\xd8\x9e\xd9\x5b\xa5\x49" \
+	"\x67\x90\x91\x95"
 
 #define EMPTY_BLOB_SHA1_BIN_LITERAL \
 	"\xe6\x9d\xe2\x9b\xb2\xd1\xd6\x43\x4b\x8b" \
@@ -54,6 +71,23 @@
 	"\x67\xe3\xb1\xe9\xa7\xdc\xda\x11\x85\x43" \
 	"\x6f\xe1\x41\xf7\x74\x91\x20\xa3\x03\x72" \
 	"\x18\x13"
+#define EMPTY_BLOB_SHA512_224_BIN_LITERAL \
+	"\xa8\x6d\x3c\x63\x33\x98\x60\x44\x56\x07" \
+	"\xd6\xcf\xd3\x55\x12\x92\xa6\xfb\x04\x9f" \
+	"\x0f\xaa\x22\x2a\x7c\x10\x02\x7b"
+#define EMPTY_BLOB_SHA512_256_BIN_LITERAL \
+	"\x65\x76\x66\x8d\x3a\xcf\x02\x2c\x9c\x77" \
+	"\x92\x0c\x83\x49\xed\x6c\xcd\x8f\xc5\x96" \
+	"\x84\x5e\x87\xc3\x8b\x9e\x74\x90\x16\xc9" \
+	"\x84\xb3"
+#define EMPTY_BLOB_SHA512_BIN_LITERAL \
+	"\xba\x4d\x0b\xb3\xec\x89\x0f\xdc\x47\xa1" \
+	"\x0d\xf5\x3a\x59\x1a\x79\x85\x22\x37\xd5" \
+	"\xe6\x35\x45\x5d\xa9\x0a\x37\x42\xd7\x48" \
+	"\x27\x08\xb5\x7d\xe2\xff\xab\xc7\x58\x1f" \
+	"\x58\x1e\xe8\x07\x5f\xba\xb3\x47\x62\x70" \
+	"\x94\x2c\xdf\x87\xfa\x7d\xd6\x89\x5d\xaa" \
+	"\x65\x09\x89\x6c"
 
 const struct object_id null_oid;
 static const struct object_id empty_tree_oid = {
@@ -67,6 +101,24 @@ static const struct object_id empty_tree_oid_sha256 = {
 };
 static const struct object_id empty_blob_oid_sha256 = {
 	EMPTY_BLOB_SHA256_BIN_LITERAL
+};
+static const struct object_id empty_tree_oid_sha512 = {
+	EMPTY_TREE_SHA512_BIN_LITERAL
+};
+static const struct object_id empty_blob_oid_sha512 = {
+	EMPTY_BLOB_SHA512_BIN_LITERAL
+};
+static const struct object_id empty_tree_oid_sha512_224 = {
+	EMPTY_TREE_SHA512_224_BIN_LITERAL
+};
+static const struct object_id empty_blob_oid_sha512_224 = {
+	EMPTY_BLOB_SHA512_224_BIN_LITERAL
+};
+static const struct object_id empty_tree_oid_sha512_256 = {
+	EMPTY_TREE_SHA512_256_BIN_LITERAL
+};
+static const struct object_id empty_blob_oid_sha512_256 = {
+	EMPTY_BLOB_SHA512_256_BIN_LITERAL
 };
 
 static void git_hash_sha1_init(git_hash_ctx *ctx)
@@ -98,6 +150,31 @@ static void git_hash_sha256_update(git_hash_ctx *ctx, const void *data, size_t l
 static void git_hash_sha256_final(unsigned char *hash, git_hash_ctx *ctx)
 {
 	git_SHA256_Final(hash, &ctx->sha256);
+}
+
+static void git_hash_sha512_init(git_hash_ctx *ctx)
+{
+	git_SHA512_Init(&ctx->sha512);
+}
+
+static void git_hash_sha512_224_init(git_hash_ctx *ctx)
+{
+	git_SHA512_224_Init(&ctx->sha512);
+}
+
+static void git_hash_sha512_256_init(git_hash_ctx *ctx)
+{
+	git_SHA512_256_Init(&ctx->sha512);
+}
+
+static void git_hash_sha512_update(git_hash_ctx *ctx, const void *data, size_t len)
+{
+	git_SHA512_Update(&ctx->sha512, data, len);
+}
+
+static void git_hash_sha512_final(unsigned char *hash, git_hash_ctx *ctx)
+{
+	git_SHA512_Final(hash, &ctx->sha512);
 }
 
 static void git_hash_unknown_init(git_hash_ctx *ctx)
@@ -153,6 +230,45 @@ const struct git_hash_algo hash_algos[GIT_HASH_NALGOS] = {
 		git_hash_sha256_final,
 		&empty_tree_oid_sha256,
 		&empty_blob_oid_sha256,
+	},
+	{
+		"sha512",
+		/* "s512", big-endian */
+		0x73353132,
+		GIT_SHA512_RAWSZ,
+		GIT_SHA512_HEXSZ,
+		GIT_SHA512_BLKSZ,
+		git_hash_sha512_init,
+		git_hash_sha512_update,
+		git_hash_sha512_final,
+		&empty_tree_oid_sha512,
+		&empty_blob_oid_sha512,
+	},
+	{
+		"sha512/224",
+		/* "s226", big-endian */
+		0x73323236,
+		GIT_SHA512_224_RAWSZ,
+		GIT_SHA512_224_HEXSZ,
+		GIT_SHA512_224_BLKSZ,
+		git_hash_sha512_224_init,
+		git_hash_sha512_update,
+		git_hash_sha512_final,
+		&empty_tree_oid_sha512_224,
+		&empty_blob_oid_sha512_224,
+	},
+	{
+		"sha512/256",
+		/* "s228", big-endian */
+		0x73323238,
+		GIT_SHA512_256_RAWSZ,
+		GIT_SHA512_256_HEXSZ,
+		GIT_SHA512_256_BLKSZ,
+		git_hash_sha512_256_init,
+		git_hash_sha512_update,
+		git_hash_sha512_final,
+		&empty_tree_oid_sha512_256,
+		&empty_blob_oid_sha512_256,
 	}
 };
 
