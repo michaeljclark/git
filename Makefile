@@ -742,6 +742,7 @@ TEST_BUILTINS_OBJS += test-sha1.o
 TEST_BUILTINS_OBJS += test-sha1-array.o
 TEST_BUILTINS_OBJS += test-sha256.o
 TEST_BUILTINS_OBJS += test-sha512.o
+TEST_BUILTINS_OBJS += test-sha3.o
 TEST_BUILTINS_OBJS += test-sigchain.o
 TEST_BUILTINS_OBJS += test-strcmp-offset.o
 TEST_BUILTINS_OBJS += test-string-list.o
@@ -1721,6 +1722,14 @@ ifdef GCRYPT_SHA512
 else
 	LIB_OBJS += sha/sha512/sha512.o
 	BASIC_CFLAGS += -DSHA512_BLK
+endif
+
+ifdef GCRYPT_SHA3
+	BASIC_CFLAGS += -DSHA3_GCRYPT
+	EXTLIBS += -lgcrypt
+else
+	LIB_OBJS += sha/sha3/sha3.o
+	BASIC_CFLAGS += -DSHA3_BLK
 endif
 
 ifdef SHA1_MAX_BLOCK_SIZE

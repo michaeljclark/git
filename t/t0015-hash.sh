@@ -132,4 +132,112 @@ test_expect_success 'test basic SHA-512 hash values' '
 
 '
 
+test_expect_success 'test basic SHA3-224 hash values' '
+	test-tool sha3-224 </dev/null >actual &&
+	grep 6b4e03423667dbb73b6e15454f0eb1abd4597f9a1b078e3f5b5a6bc7 actual &&
+	printf "a" | test-tool sha3-224 >actual &&
+	grep 9e86ff69557ca95f405f081269685b38e3a819b309ee942f482b6a8b actual &&
+	printf "abc" | test-tool sha3-224 >actual &&
+	grep e642824c3f8cf24ad09234ee7d3c766fc9a3a5168d0c94ad73b46fdf actual &&
+	printf "message digest" | test-tool sha3-224 >actual &&
+	grep 18768bb4c48eb7fc88e5ddb17efcf2964abd7798a39d86a4b4a1e4c8 actual &&
+	printf "abcdefghijklmnopqrstuvwxyz" | test-tool sha3-224 >actual &&
+	grep 5cdeca81e123f87cad96b9cba999f16f6d41549608d4e0f4681b8239 actual &&
+	# Try to exercise the chunking code by turning autoflush on.
+	perl -e "$| = 1; print q{aaaaaaaaaa} for 1..100000;" | \
+		test-tool sha3-224 >actual &&
+	grep d69335b93325192e516a912e6d19a15cb51c6ed5c15243e7a7fd653c actual &&
+	perl -e "$| = 1; print q{abcdefghijklmnopqrstuvwxyz} for 1..100000;" | \
+		test-tool sha3-224 >actual &&
+	grep 165efebf793f03c7610d6d5e79462c5f9b7fbcb903f4448038eb35a2 actual &&
+	printf "blob 0\0" | test-tool sha3-224 >actual &&
+	grep f1e72935ac5c52d5c09b408842e207c42e5434424007364fdb468063 actual &&
+	printf "blob 3\0abc" | test-tool sha3-224 >actual &&
+	grep f83c608c9d424b858f66ec80a67ab42409bdc1aae8d7867e6b595e2a actual &&
+	printf "tree 0\0" | test-tool sha3-224 >actual &&
+	grep 1e04f23de0b2b7d1b85e6768fa997a99bd0119dec8158ae0ad07e183 actual
+
+'
+
+test_expect_success 'test basic SHA3-256 hash values' '
+	test-tool sha3-256 </dev/null >actual &&
+	grep a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a actual &&
+	printf "a" | test-tool sha3-256 >actual &&
+	grep 80084bf2fba02475726feb2cab2d8215eab14bc6bdd8bfb2c8151257032ecd8b actual &&
+	printf "abc" | test-tool sha3-256 >actual &&
+	grep 3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532 actual &&
+	printf "message digest" | test-tool sha3-256 >actual &&
+	grep edcdb2069366e75243860c18c3a11465eca34bce6143d30c8665cefcfd32bffd actual &&
+	printf "abcdefghijklmnopqrstuvwxyz" | test-tool sha3-256 >actual &&
+	grep 7cab2dc765e21b241dbc1c255ce620b29f527c6d5e7f5f843e56288f0d707521 actual &&
+	# Try to exercise the chunking code by turning autoflush on.
+	perl -e "$| = 1; print q{aaaaaaaaaa} for 1..100000;" | \
+		test-tool sha3-256 >actual &&
+	grep 5c8875ae474a3634ba4fd55ec85bffd661f32aca75c6d699d0cdcb6c115891c1 actual &&
+	perl -e "$| = 1; print q{abcdefghijklmnopqrstuvwxyz} for 1..100000;" | \
+		test-tool sha3-256 >actual &&
+	grep 529a361bd6ebbb28deea5a78db2fd714c5b415499d608e37123c4ca130770e6d actual &&
+	printf "blob 0\0" | test-tool sha3-256 >actual &&
+	grep 5aadde7d8ca5b9b352c250ce9b799f5d818893fe89dc52b49f438c8a9ba0a545 actual &&
+	printf "blob 3\0abc" | test-tool sha3-256 >actual &&
+	grep 1a6437dda2a94af5c38246520fd1461886dc46b97ced88b04d43537c603cde6d actual &&
+	printf "tree 0\0" | test-tool sha3-256 >actual &&
+	grep 30211ed485c912e5bc285bd0bd8959ddbfb5875cafb0ae28e0abfa1077b2b214 actual
+
+'
+
+test_expect_success 'test basic SHA3-384 hash values' '
+	test-tool sha3-384 </dev/null >actual &&
+	grep 0c63a75b845e4f7d01107d852e4c2485c51a50aaaa94fc61995e71bbee983a2ac3713831264adb47fb6bd1e058d5f004 actual &&
+	printf "a" | test-tool sha3-384 >actual &&
+	grep 1815f774f320491b48569efec794d249eeb59aae46d22bf77dafe25c5edc28d7ea44f93ee1234aa88f61c91912a4ccd9 actual &&
+	printf "abc" | test-tool sha3-384 >actual &&
+	grep ec01498288516fc926459f58e2c6ad8df9b473cb0fc08c2596da7cf0e49be4b298d88cea927ac7f539f1edf228376d25 actual &&
+	printf "message digest" | test-tool sha3-384 >actual &&
+	grep d9519709f44af73e2c8e291109a979de3d61dc02bf69def7fbffdfffe662751513f19ad57e17d4b93ba1e484fc1980d5 actual &&
+	printf "abcdefghijklmnopqrstuvwxyz" | test-tool sha3-384 >actual &&
+	grep fed399d2217aaf4c717ad0c5102c15589e1c990cc2b9a5029056a7f7485888d6ab65db2370077a5cadb53fc9280d278f actual &&
+	# Try to exercise the chunking code by turning autoflush on.
+	perl -e "$| = 1; print q{aaaaaaaaaa} for 1..100000;" | \
+		test-tool sha3-384 >actual &&
+	grep eee9e24d78c1855337983451df97c8ad9eedf256c6334f8e948d252d5e0e76847aa0774ddb90a842190d2c558b4b8340 actual &&
+	perl -e "$| = 1; print q{abcdefghijklmnopqrstuvwxyz} for 1..100000;" | \
+		test-tool sha3-384 >actual &&
+	grep 62c16d1d4366dd40a4c6995168c1e7b35e8e8103403274151a34c5838845a0f3d1a192dadbb0964af7d6941c50f0eb97 actual &&
+	printf "blob 0\0" | test-tool sha3-384 >actual &&
+	grep a53e088abe908d8c9458a8ba955690c417f768031ecf156a1662441faeda502e838f2660164b61a78b15ac75e0f8ded4 actual &&
+	printf "blob 3\0abc" | test-tool sha3-384 >actual &&
+	grep ba0eda34a4b47f9ec8ed996a260efadeb576e4f682b7d0d7d84b4781a210771da519e48f2542431882499fbd21d16935 actual &&
+	printf "tree 0\0" | test-tool sha3-384 >actual &&
+	grep 92e99ae9281a89dc332c9ce8f2831db50ecc54784d51c3ebd5c1151e8fd603fb408abbbb9dcf5713ed21566789ce8059 actual
+
+'
+
+test_expect_success 'test basic SHA3-512 hash values' '
+	test-tool sha3-512 </dev/null >actual &&
+	grep a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26 actual &&
+	printf "a" | test-tool sha3-512 >actual &&
+	grep 697f2d856172cb8309d6b8b97dac4de344b549d4dee61edfb4962d8698b7fa803f4f93ff24393586e28b5b957ac3d1d369420ce53332712f997bd336d09ab02a actual &&
+	printf "abc" | test-tool sha3-512 >actual &&
+	grep b751850b1a57168a5693cd924b6b096e08f621827444f70d884f5d0240d2712e10e116e9192af3c91a7ec57647e3934057340b4cf408d5a56592f8274eec53f0 actual &&
+	printf "message digest" | test-tool sha3-512 >actual &&
+	grep 3444e155881fa15511f57726c7d7cfe80302a7433067b29d59a71415ca9dd141ac892d310bc4d78128c98fda839d18d7f0556f2fe7acb3c0cda4bff3a25f5f59 actual &&
+	printf "abcdefghijklmnopqrstuvwxyz" | test-tool sha3-512 >actual &&
+	grep af328d17fa28753a3c9f5cb72e376b90440b96f0289e5703b729324a975ab384eda565fc92aaded143669900d761861687acdc0a5ffa358bd0571aaad80aca68 actual &&
+	# Try to exercise the chunking code by turning autoflush on.
+	perl -e "$| = 1; print q{aaaaaaaaaa} for 1..100000;" | \
+		test-tool sha3-512 >actual &&
+	grep 3c3a876da14034ab60627c077bb98f7e120a2a5370212dffb3385a18d4f38859ed311d0a9d5141ce9cc5c66ee689b266a8aa18ace8282a0e0db596c90b0a7b87 actual &&
+	perl -e "$| = 1; print q{abcdefghijklmnopqrstuvwxyz} for 1..100000;" | \
+		test-tool sha3-512 >actual &&
+	grep 06b2e52cc7595712651351cdc6726acdebba682844c7983f66089158433975e4d2caf6c0efc4c7018cd2da73df53047f19a79935941025db4aaf1bd876c49ad6 actual &&
+	printf "blob 0\0" | test-tool sha3-512 >actual &&
+	grep 4353a50d0d3d8edd231763fb0102116286aa6d760a772133e32c124a998a19467d789064dd763e57b547ff3a31882da3d2031378cfe0fa5774c12eea51055a51 actual &&
+	printf "blob 3\0abc" | test-tool sha3-512 >actual &&
+	grep 89de02c66a3beca3411b5a72699fe8389d574b7d59ca17d42cba7a83cd03423388b1c4248cd8a3cce73a0768948fe1a800c155c24378334f6ae2bb8c5bf48284 actual &&
+	printf "tree 0\0" | test-tool sha3-512 >actual &&
+	grep 8f86cb67ce0a8bc865b300733c27dade0ea8fe66299b4bc6368ec84f53134c367c66f0e3376261ab5a86d722ad0d98391a3c1c472d6791da464a7836006de12c actual
+
+'
+
 test_done

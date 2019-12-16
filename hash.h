@@ -29,6 +29,12 @@
 #include "sha/sha512/sha512.h"
 #endif
 
+#if defined(SHA3_GCRYPT)
+#include "sha/sha3/gcrypt.h"
+#else
+#include "sha/sha3/sha3.h"
+#endif
+
 #ifndef platform_SHA_CTX
 /*
  * platform's underlying implementation of SHA-1; could be OpenSSL,
@@ -67,6 +73,14 @@
 #define git_SHA512_Update	platform_SHA512_Update
 #define git_SHA512_Final	platform_SHA512_Final
 
+#define git_SHA3_CTX 		platform_SHA3_CTX
+#define git_SHA3_224_Init 	platform_SHA3_224_Init
+#define git_SHA3_256_Init 	platform_SHA3_256_Init
+#define git_SHA3_384_Init 	platform_SHA3_384_Init
+#define git_SHA3_512_Init 	platform_SHA3_512_Init
+#define git_SHA3_Update 	platform_SHA3_Update
+#define git_SHA3_Final	 	platform_SHA3_Final
+
 #ifdef SHA1_MAX_BLOCK_SIZE
 #include "compat/sha1-chunked.h"
 #undef git_SHA1_Update
@@ -93,14 +107,23 @@
 #define GIT_HASH_SHA512_224 4
 /* SHA-512-256  */
 #define GIT_HASH_SHA512_256 5
+/* SHA-3-224 */
+#define GIT_HASH_SHA3_224 6
+/* SHA-3-256 */
+#define GIT_HASH_SHA3_256 7
+/* SHA-3-384 */
+#define GIT_HASH_SHA3_384 8
+/* SHA-3-512 */
+#define GIT_HASH_SHA3_512 9
 /* Number of algorithms supported (including unknown). */
-#define GIT_HASH_NALGOS (GIT_HASH_SHA512_256 + 1)
+#define GIT_HASH_NALGOS (GIT_HASH_SHA3_512 + 1)
 
 /* A suitably aligned type for stack allocations of hash contexts. */
 union git_hash_ctx {
 	git_SHA_CTX sha1;
 	git_SHA256_CTX sha256;
 	git_SHA512_CTX sha512;
+	git_SHA3_CTX sha3;
 };
 typedef union git_hash_ctx git_hash_ctx;
 
@@ -188,6 +211,30 @@ static inline int hash_algo_by_ptr(const struct git_hash_algo *p)
 #define GIT_SHA512_256_HEXSZ (2 * GIT_SHA512_256_RAWSZ)
 /* The block size of SHA-512-256. */
 #define GIT_SHA512_256_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-3-224 value). */
+#define GIT_SHA3_224_RAWSZ 28
+#define GIT_SHA3_224_HEXSZ (2 * GIT_SHA3_224_RAWSZ)
+/* The block size of SHA-3-224. */
+#define GIT_SHA3_224_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-3-256 value). */
+#define GIT_SHA3_256_RAWSZ 32
+#define GIT_SHA3_256_HEXSZ (2 * GIT_SHA3_256_RAWSZ)
+/* The block size of SHA-3-256. */
+#define GIT_SHA3_256_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-3-384 value). */
+#define GIT_SHA3_384_RAWSZ 48
+#define GIT_SHA3_384_HEXSZ (2 * GIT_SHA3_384_RAWSZ)
+/* The block size of SHA-3-384. */
+#define GIT_SHA3_384_BLKSZ 128
+
+/* The length in bytes and in hex digits of an object name (SHA-3-512 value). */
+#define GIT_SHA3_512_RAWSZ 64
+#define GIT_SHA3_512_HEXSZ (2 * GIT_SHA3_512_RAWSZ)
+/* The block size of SHA-3-512. */
+#define GIT_SHA3_512_BLKSZ 128
 
 /* The length in byte and in hex digits of the largest possible hash value. */
 #define GIT_MAX_RAWSZ GIT_SHA512_RAWSZ
