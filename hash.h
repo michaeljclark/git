@@ -25,12 +25,18 @@
 
 #if defined(SHA512_GCRYPT)
 #include "sha/sha512/gcrypt.h"
+#elif defined(SHA_EVP_OPENSSL)
+#include <openssl/evp.h>
+#include "sha/sha_evp/sha_evp.h"
 #else
 #include "sha/sha512/sha512.h"
 #endif
 
 #if defined(SHA3_GCRYPT)
 #include "sha/sha3/gcrypt.h"
+#elif defined(SHA_EVP_OPENSSL)
+#include <openssl/evp.h>
+#include "sha/sha_evp/sha_evp.h"
 #else
 #include "sha/sha3/sha3.h"
 #endif

@@ -189,6 +189,8 @@ all::
 #
 # Define OPENSSL_SHA256 to use the SHA-256 routines in OpenSSL.
 #
+# Define OPENSSL_EVP to use the SHA-3 and SHA-512 routines in OpenSSL.
+#
 # Define NEEDS_CRYPTO_WITH_SSL if you need -lcrypto when using -lssl (Darwin).
 #
 # Define NEEDS_SSL_WITH_CRYPTO if you need -lssl when using -lcrypto (Darwin).
@@ -1716,6 +1718,11 @@ else
 endif
 endif
 
+ifdef OPENSSL_EVP
+	EXTLIBS += $(LIB_4_CRYPTO)
+	BASIC_CFLAGS += -DSHA_EVP_OPENSSL
+	LIB_OBJS += sha/sha_evp/sha_evp.o
+else
 ifdef GCRYPT_SHA512
 	BASIC_CFLAGS += -DSHA512_GCRYPT
 	EXTLIBS += -lgcrypt
@@ -1723,13 +1730,13 @@ else
 	LIB_OBJS += sha/sha512/sha512.o
 	BASIC_CFLAGS += -DSHA512_BLK
 endif
-
 ifdef GCRYPT_SHA3
 	BASIC_CFLAGS += -DSHA3_GCRYPT
 	EXTLIBS += -lgcrypt
 else
 	LIB_OBJS += sha/sha3/sha3.o
 	BASIC_CFLAGS += -DSHA3_BLK
+endif
 endif
 
 ifdef SHA1_MAX_BLOCK_SIZE
